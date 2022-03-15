@@ -11,7 +11,8 @@ const goalSchema = new Schema(
 
     frequency: Number,
 
-    streak: Number,
+    /* Change the streak to zero? */
+    streak: 0,
   }
      
 );

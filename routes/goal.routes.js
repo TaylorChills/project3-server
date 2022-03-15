@@ -56,7 +56,7 @@ router.put("/goals/:goalId", (req, res, next) => {
 
 router.delete("/goals/:goalId", (req, res, next) => {
   const { goalId } = req.params;
-  const { _id } = req.payload;
+  /* const { _id } = req.payload; */
 
   if (!mongoose.Types.ObjectId.isValid(goalId)) {
     res.status(400).json({ message: "Specified Id is not valid" });
