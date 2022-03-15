@@ -6,10 +6,10 @@ const Goal = require("../models/Goal.model");
 const { response } = require("../app");
 
 router.post("/goals", (req, res, next) => {
-  const { name, description, type, frequency, streak } = req.body;
+  const { name, description, type, frequency } = req.body;
   const { _id } = req.payload;
 
-  Goal.create({ name, description, type, frequency, streak })
+  Goal.create({ name, description, type, frequency })
     .then((newGoal) => {
       return User.findByIdAndUpdate(
         _id,
@@ -22,8 +22,10 @@ router.post("/goals", (req, res, next) => {
 });
 
 router.get("/goals", (req, res, next) => {
-  Goal.find()
-    .then((response) => res.json(response))
+  const { _id } = req.payload;
+  User.findById(_id)
+    .populate("goals")
+    .then((response) => res.json(response.goals))
     .then(console.log(response))
     .catch((err) => res.json(err));
 });
@@ -56,7 +58,7 @@ router.put("/goals/:goalId", (req, res, next) => {
 
 router.delete("/goals/:goalId", (req, res, next) => {
   const { goalId } = req.params;
-  /* const { _id } = req.payload; */
+  const { _id } = req.payload;
 
   if (!mongoose.Types.ObjectId.isValid(goalId)) {
     res.status(400).json({ message: "Specified Id is not valid" });

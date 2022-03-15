@@ -12,7 +12,9 @@ const goalSchema = new Schema(
     frequency: Number,
 
     /* Change the streak to zero? */
-    streak: 0,
+    streak: {type:Number, default: 0},
+
+    dates: []
   }
      
 );

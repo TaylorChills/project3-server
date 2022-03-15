@@ -25,7 +25,7 @@ const authRoutes = require("./routes/auth.routes");
 app.use("/", authRoutes);
 
 const goalRoutes = require("./routes/goal.routes");
-app.use("/", /* isAuthenticated, */ goalRoutes);
+app.use("/", isAuthenticated, goalRoutes);
 
 
 
