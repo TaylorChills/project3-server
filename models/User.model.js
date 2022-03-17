@@ -7,7 +7,9 @@ const userSchema = new Schema(
     },
     password: String,
 
-    goals:[{ type: Schema.Types.ObjectId, ref: 'Goal' }]
+    goals:[{ type: Schema.Types.ObjectId, ref: 'Goal' }],
+
+    imageUrl: String
   },
   {
     timestamps: true,

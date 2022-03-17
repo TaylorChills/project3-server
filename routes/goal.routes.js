@@ -21,6 +21,8 @@ router.post("/goals", (req, res, next) => {
     .catch((err) => next(err));
 });
 
+
+
 router.get("/goals", (req, res, next) => {
   const { _id } = req.payload;
   User.findById(_id)
@@ -73,5 +75,58 @@ router.delete("/goals/:goalId", (req, res, next) => {
     .catch((err) => res.json(err));
 
 });
+
+
+const fileUploader = require("../config/cloudinary.config");
+
+router.post("/upload", fileUploader.single("file"), (req, res, next) => {
+  console.log("file is: ", req.file)
+ 
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+  res.json({ fileUrl: req.file.path });
+});
+
+
+router.put("/goals/:goalId/send-dates", (req, res, next) => {
+  const { goalId } = req.params;
+  const datesArr = req.body.value
+  console.log(datesArr)
+
+  const currentStreak = checkAccomplishment(datesArr)
+
+  if (!mongoose.Types.ObjectId.isValid(goalId)) {
+    res.status(400).json({ message: "Specified Id is not valid" });
+    return;
+  }
+
+  Goal.findByIdAndUpdate(goalId, {dates: datesArr, streak: currentStreak}, { new: true })
+    .then((response) => res.json(response))
+    .catch((err) => res.json(err));
+  
+});
+
+
+function checkAccomplishment(dates) {
+	let currentStreak = 0;
+
+	dates.forEach((date, i, arr) => {
+
+        const difference = arr[i + 1] - arr[i]
+
+		if (Math.round((difference) / 86400000) > 1) {
+			currentStreak = 0;
+            
+		}
+
+		if (Math.round(difference / 86400000) == 1) {
+			currentStreak++;
+        
+		}
+	});
+	return currentStreak + 1;
+}
 
 module.exports = router;
